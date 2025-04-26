@@ -1,8 +1,6 @@
 
 import { TextField, Box, Button, Card, Typography } from '@mui/material';
-import { LocalizationProvider } from '@mui/x-date-pickers';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { useState } from 'react';
 import { Todo } from '../../../types/todo';
 import useTodos from '../../../hooks/useTodos';
@@ -43,8 +41,6 @@ const AddTodoForm = () => {
     setTitle('');
     setDescription('');
     setDeadline(null);
-
-    console.log('added todo:', newTodo);
   };
 
   return (
@@ -71,22 +67,19 @@ const AddTodoForm = () => {
           fullWidth
           margin="normal"
         />
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DateTimePicker
-            label="Deadline"
-            value={deadline}
-            onChange={(newValue) => setDeadline(newValue)}
-            disablePast
-            slotProps={{
-              textField: {
-                fullWidth: true,
-                margin: 'normal',
-                required: true,
-              },
-            }}
-          />
-        </LocalizationProvider>
-        
+        <DateTimePicker
+          label="Deadline"
+          value={deadline}
+          onChange={(newValue) => setDeadline(newValue)}
+          disablePast
+          slotProps={{
+            textField: {
+              fullWidth: true,
+              margin: 'normal',
+              required: true,
+            },
+          }}
+        />
         {error && (
           <Typography color="error" sx={{ mt: 1 }}>
             {error}
