@@ -1,13 +1,11 @@
-import AddTodoForm from "./components/features/todos/AddTodoForm";
+import Home from "./containers/Home";
 import MainLayout from "./layouts/MainLayout";
 
 
 function App() {
   return (
     <MainLayout>
-      <div>
-        <AddTodoForm />
-      </div>
+      <Home />
     </MainLayout>
   );
 }
