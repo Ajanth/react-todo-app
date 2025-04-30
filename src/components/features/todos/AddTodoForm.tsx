@@ -3,11 +3,12 @@ import { TextField, Box, Button, Card, Typography } from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { useState } from 'react';
 import { Todo } from '../../../types/todo';
-import useTodos from '../../../hooks/useTodos';
 
+interface AddTodoFormProps {
+  addTodo: (todo: Todo) => void;
+}
 
-const AddTodoForm = () => {
-  const { addTodo } = useTodos();
+const AddTodoForm = ({ addTodo }: AddTodoFormProps) => {
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
