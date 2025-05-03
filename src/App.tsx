@@ -1,10 +1,12 @@
+import AddTodoForm from "./components/features/todos/AddTodoForm";
 import MainLayout from "./layouts/MainLayout";
+
 
 function App() {
   return (
     <MainLayout>
       <div>
-        <h1>Hi, this is a test header, remove it when you start working</h1>
+        <AddTodoForm />
       </div>
     </MainLayout>
   );
