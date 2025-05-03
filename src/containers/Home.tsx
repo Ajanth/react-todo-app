@@ -41,6 +41,21 @@ function Home() {
         onClose={() => setIsDialogOpen(false)}
         maxWidth="sm"
         fullWidth
+        sx={{
+          '& .MuiDialog-container': {
+            alignItems: 'flex-start',
+            paddingTop: '10vh'
+          }
+        }}
+        PaperProps={{
+          sx: {
+            position: 'relative',
+            overflow: 'visible',
+            '& .MuiPopover-root': {
+              zIndex: 9999
+            }
+          }
+        }}
       >
         <AddTodoForm addTodo={handleAddTodo} />
       </Dialog>

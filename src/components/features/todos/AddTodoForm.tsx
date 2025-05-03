@@ -1,4 +1,3 @@
-
 import { TextField, Box, Button, Card, Typography } from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { useState } from 'react';
@@ -77,8 +76,22 @@ const AddTodoForm = ({ addTodo }: AddTodoFormProps) => {
             textField: {
               fullWidth: true,
               margin: 'normal',
-              required: true,
+              required: true
             },
+            popper: {
+              sx: {
+                zIndex: 99999
+              },
+              placement: "bottom-start",
+              modifiers: [
+                {
+                  name: "offset",
+                  options: {
+                    offset: [0, 8]
+                  }
+                }
+              ]
+            }
           }}
         />
         {error && (
