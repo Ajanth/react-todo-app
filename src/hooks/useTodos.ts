@@ -1,5 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Todo } from '../types/todo';
+
+export type FilterType = 'all' | 'active' | 'completed';
 
 export const useTodos = () => {
   // Initialize from localStorage, but only once on component mount
@@ -13,6 +15,8 @@ export const useTodos = () => {
     }
   });
 
+  const [filter, setFilter] = useState<FilterType>('all');
+
   // Persist to localStorage whenever todos change
   useEffect(() => {
     try {
@@ -21,6 +25,18 @@ export const useTodos = () => {
       console.error('Error saving todos to localStorage:', error);
     }
   }, [todos]);
+
+  // Filter todos based on current filter
+  const filteredTodos = useMemo(() => {
+    switch (filter) {
+      case 'active':
+        return todos.filter(todo => !todo.completed);
+      case 'completed':
+        return todos.filter(todo => todo.completed);
+      default:
+        return todos;
+    }
+  }, [todos, filter]);
 
   // Add a todo to the list of todos
   const addTodo = useCallback((todo: Todo) => {
@@ -46,7 +62,16 @@ export const useTodos = () => {
     );
   }, []);
 
-  return { todos, addTodo, editTodo, deleteTodo, toggleComplete };
+  return { 
+    todos: filteredTodos, 
+    allTodos: todos,
+    filter,
+    setFilter,
+    addTodo, 
+    editTodo, 
+    deleteTodo, 
+    toggleComplete 
+  };
 };
 
-export default useTodos; 
+export default useTodos;

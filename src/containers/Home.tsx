@@ -1,14 +1,27 @@
 import { useState } from "react";
 import AddTodoForm from "../components/features/todos/AddTodoForm";
 import TodoList from "../components/features/todos/TodoList";
+import FilterTodos from "../components/features/todos/FilterTodos";
 import useTodos from "../hooks/useTodos";
 import { Fab, Dialog } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { Todo } from "../types/todo";
 
 function Home() {
-  const { addTodo, todos, toggleComplete, deleteTodo, editTodo } = useTodos();
+  const { 
+    addTodo, 
+    todos, 
+    allTodos,
+    filter,
+    setFilter,
+    toggleComplete, 
+    deleteTodo, 
+    editTodo 
+  } = useTodos();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const activeTodos = allTodos.filter(todo => !todo.completed).length;
+  const completedTodos = allTodos.filter(todo => todo.completed).length;
 
   const handleAddTodo = (todo: Todo) => {
     addTodo(todo);
@@ -17,6 +30,14 @@ function Home() {
   
   return (
     <div style={{ padding: "20px", position: "relative", minHeight: "calc(100vh - 64px)" }}>
+      <FilterTodos
+        filter={filter}
+        setFilter={setFilter}
+        allTodos={allTodos.length}
+        activeTodos={activeTodos}
+        completedTodos={completedTodos}
+      />
+      
       <TodoList 
         todos={todos} 
         toggleComplete={toggleComplete} 
