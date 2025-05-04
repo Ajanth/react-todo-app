@@ -7,20 +7,21 @@ import AddIcon from "@mui/icons-material/Add";
 import { Todo } from "../types/todo";
 
 function Home() {
-  const { addTodo, todos, toggleComplete, deleteTodo } = useTodos();
+  const { addTodo, todos, toggleComplete, deleteTodo, editTodo } = useTodos();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleAddTodo = (todo: Todo) => {
     addTodo(todo);
     setIsDialogOpen(false);
   };
-
+  
   return (
     <div style={{ padding: "20px", position: "relative", minHeight: "calc(100vh - 64px)" }}>
       <TodoList 
         todos={todos} 
         toggleComplete={toggleComplete} 
         deleteTodo={deleteTodo} 
+        editTodo={editTodo}
       />
       
       <Fab 
