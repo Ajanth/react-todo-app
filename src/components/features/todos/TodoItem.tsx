@@ -1,11 +1,22 @@
-import { ListItem, Checkbox, Typography, Box, IconButton } from "@mui/material";
+import { ListItem, Checkbox, Typography, Box, IconButton, Dialog } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { TodoItemProps } from "../../../types/TodoItemProps";
+import { Todo } from "../../../types/todo";
+import EditTodoForm from "./EditTodoForm";
+import { useState } from "react";
+
+interface TodoItemProps {
+  todo: Todo;
+  toggleComplete: (id: string) => void;
+  deleteTodo: (id: string) => void;
+  editTodo: (todo: Todo) => void;
+}
 
 
 const TodoItem = ( prop: TodoItemProps  ) => {
-    const { todo, toggleComplete, deleteTodo } = prop;
+    const { todo, toggleComplete, deleteTodo, editTodo } = prop;
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
 
     const handleToggle = () => {
         toggleComplete(todo.id);
@@ -15,7 +26,12 @@ const TodoItem = ( prop: TodoItemProps  ) => {
         deleteTodo(todo.id);
     };
 
+    const handleEdit = () => {
+        setIsDialogOpen(true);
+    }
+        
     return (
+      <>
         <ListItem
           sx={{
               display: 'flex',
@@ -58,7 +74,7 @@ const TodoItem = ( prop: TodoItemProps  ) => {
           </Box>
 
           <Box>
-            <IconButton aria-label="Edit todo" onClick={() => { /* Edit action later */ }}>
+            <IconButton aria-label="Edit todo" onClick={handleEdit}>
               <EditIcon />
             </IconButton>
             <IconButton aria-label="Delete todo" color="error" onClick={handleDelete}>
@@ -66,7 +82,30 @@ const TodoItem = ( prop: TodoItemProps  ) => {
             </IconButton>
           </Box>
         </ListItem>
-
+        <Dialog 
+          open={isDialogOpen} 
+          onClose={() => setIsDialogOpen(false)}
+          maxWidth="sm"
+          fullWidth
+          sx={{
+            '& .MuiDialog-container': {
+              alignItems: 'flex-start',
+              paddingTop: '10vh'
+            }
+          }}
+          PaperProps={{
+            sx: {
+              position: 'relative',
+              overflow: 'visible',
+              '& .MuiPopover-root': {
+                zIndex: 9999
+              }
+            }
+          }}
+        >
+          <EditTodoForm todo={todo} editTodo={editTodo} setIsDialogOpen={setIsDialogOpen} />
+        </Dialog>
+      </>
  );
 };
 

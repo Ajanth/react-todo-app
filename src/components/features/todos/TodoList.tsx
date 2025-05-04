@@ -6,9 +6,10 @@ interface TodoListProps {
     todos: Todo[];
     toggleComplete: (id: string) => void;
     deleteTodo: (id: string) => void;
+    editTodo: (todo: Todo) => void;
 }
 
-const TodoList = ({ todos, toggleComplete, deleteTodo }: TodoListProps) => {
+const TodoList = ({ todos, toggleComplete, deleteTodo, editTodo }: TodoListProps) => {
     if (!todos.length) {
         return (
             <Typography 
@@ -29,6 +30,7 @@ const TodoList = ({ todos, toggleComplete, deleteTodo }: TodoListProps) => {
                     todo={todo} 
                     toggleComplete={toggleComplete} 
                     deleteTodo={deleteTodo} 
+                    editTodo={editTodo}
                 />
             ))}
         </List>
