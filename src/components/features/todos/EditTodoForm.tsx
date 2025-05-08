@@ -1,4 +1,4 @@
-import { TextField, Button } from "@mui/material";
+import { TextField, Button, Box, Card, Typography } from "@mui/material";
 import { Todo } from "../../../types/todo";
 import { useState } from "react";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
@@ -14,8 +14,6 @@ const EditTodoForm = ( { todo, editTodo, setIsDialogOpen }: EditTodoFormProps) =
     const [description, setDescription] = useState(todo.description || "");
     const [deadline, setDeadline] = useState<Date | null>(new Date(todo.deadline));
     const [error, setError] = useState("");
-        
-    
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -39,67 +37,71 @@ const EditTodoForm = ( { todo, editTodo, setIsDialogOpen }: EditTodoFormProps) =
         };
 
         editTodo(updatedTodo);
-
-        setTitle("");
-        setDescription("");
-        setDeadline(null);
-
         setIsDialogOpen(false);
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <TextField
-                label="Title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-                fullWidth
-                margin="normal"
-            />
-            <TextField
-                label="Description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                multiline
-                rows={4}
-                fullWidth
-                margin="normal"
-            />
-            <DateTimePicker
-                label="Deadline"
-                value={deadline}
-                onChange={(newValue) => setDeadline(newValue)}
-                disablePast
-                slotProps={{
-                    textField: {
-                    fullWidth: true,
-                    margin: 'normal',
-                    required: true
-                    },
-                    popper: {
-                    sx: {
-                        zIndex: 99999
-                    },
-                    placement: "bottom-start",
-                    modifiers: [
-                        {
-                        name: "offset",
-                        options: {
-                            offset: [0, 8]
-                        }
-                        }
-                    ]
-                    }
-                }}
-            />
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
-            Save
-            </Button>
+        <Card sx={{ maxWidth: 500, mx: 'auto', p: 3 }}>
+            <Typography variant="h6" gutterBottom>
+                Edit Task
+            </Typography>
 
-        </form>
+            <Box component="form" onSubmit={handleSubmit}>
+                <TextField
+                    label="Title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                    fullWidth
+                    margin="normal"
+                />
+                <TextField
+                    label="Description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    multiline
+                    rows={3}
+                    fullWidth
+                    margin="normal"
+                />
+                <DateTimePicker
+                    label="Deadline"
+                    value={deadline}
+                    onChange={(newValue) => setDeadline(newValue)}
+                    disablePast
+                    slotProps={{
+                        textField: {
+                            fullWidth: true,
+                            margin: 'normal',
+                            required: true
+                        },
+                        popper: {
+                            sx: {
+                                zIndex: 99999
+                            },
+                            placement: "bottom-start",
+                            modifiers: [
+                                {
+                                    name: "offset",
+                                    options: {
+                                        offset: [0, 8]
+                                    }
+                                }
+                            ]
+                        }
+                    }}
+                />
+                {error && (
+                    <Typography color="error" sx={{ mt: 1 }}>
+                        {error}
+                    </Typography>
+                )}
+                <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
+                    Save Changes
+                </Button>
+            </Box>
+        </Card>
     );
-}
+};
 
 export default EditTodoForm;
