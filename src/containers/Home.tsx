@@ -7,13 +7,16 @@ import { Fab, Dialog } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { Todo } from "../types/todo";
 
-function Home() {
-  const { 
+function Home() {  const { 
     addTodo, 
     todos, 
     allTodos,
     filter,
     setFilter,
+    sortBy,
+    setSortBy,
+    sortOrder,
+    setSortOrder,
     toggleComplete, 
     deleteTodo, 
     editTodo 
@@ -29,10 +32,13 @@ function Home() {
   };
   
   return (
-    <div style={{ padding: "20px", position: "relative", minHeight: "calc(100vh - 64px)" }}>
-      <FilterTodos
+    <div style={{ padding: "20px", position: "relative", minHeight: "calc(100vh - 64px)" }}>      <FilterTodos
         filter={filter}
         setFilter={setFilter}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        sortOrder={sortOrder}
+        setSortOrder={setSortOrder}
         allTodos={allTodos.length}
         activeTodos={activeTodos}
         completedTodos={completedTodos}

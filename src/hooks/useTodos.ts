@@ -2,13 +2,21 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Todo } from '../types/todo';
 
 export type FilterType = 'all' | 'active' | 'completed';
+export type SortType = 'deadline' | 'createdAt';
+export type SortOrder = 'asc' | 'desc';
 
 export const useTodos = () => {
   // Initialize from localStorage, but only once on component mount
   const [todos, setTodos] = useState<Todo[]>(() => {
     try {
       const saved = localStorage.getItem('todos');
-      return saved ? JSON.parse(saved) : [];
+      return saved ? JSON.parse(saved, (key, value) => {
+        // Convert date strings back to Date objects
+        if (key === 'deadline' || key === 'createdAt') {
+          return new Date(value);
+        }
+        return value;
+      }) : [];
     } catch (error) {
       console.error('Error parsing todos from localStorage:', error);
       return [];
@@ -16,6 +24,8 @@ export const useTodos = () => {
   });
 
   const [filter, setFilter] = useState<FilterType>('all');
+  const [sortBy, setSortBy] = useState<SortType>('deadline');
+  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
 
   // Persist to localStorage whenever todos change
   useEffect(() => {
@@ -26,17 +36,32 @@ export const useTodos = () => {
     }
   }, [todos]);
 
-  // Filter todos based on current filter
+  // Filter and sort todos based on current filter and sort settings
   const filteredTodos = useMemo(() => {
+    let result = [...todos];
+
+    // Apply filter
     switch (filter) {
       case 'active':
-        return todos.filter(todo => !todo.completed);
+        result = result.filter(todo => !todo.completed);
+        break;
       case 'completed':
-        return todos.filter(todo => todo.completed);
-      default:
-        return todos;
+        result = result.filter(todo => todo.completed);
+        break;
     }
-  }, [todos, filter]);
+
+    // Apply sorting
+    result.sort((a, b) => {
+      const dateA = sortBy === 'deadline' ? a.deadline : a.createdAt;
+      const dateB = sortBy === 'deadline' ? b.deadline : b.createdAt;
+      
+      return sortOrder === 'asc' 
+        ? dateA.getTime() - dateB.getTime()
+        : dateB.getTime() - dateA.getTime();
+    });
+
+    return result;
+  }, [todos, filter, sortBy, sortOrder]);
 
   // Add a todo to the list of todos
   const addTodo = useCallback((todo: Todo) => {
@@ -67,6 +92,10 @@ export const useTodos = () => {
     allTodos: todos,
     filter,
     setFilter,
+    sortBy,
+    setSortBy,
+    sortOrder,
+    setSortOrder,
     addTodo, 
     editTodo, 
     deleteTodo, 

@@ -34,6 +34,7 @@ const AddTodoForm = ({ addTodo }: AddTodoFormProps) => {
     description: description.trim() || undefined,
     deadline,
     completed: false,
+    createdAt: new Date(),
   };
 
     addTodo(newTodo);
