@@ -1,9 +1,25 @@
-import { ListItem, Checkbox, Typography, Box, IconButton, Dialog } from "@mui/material";
+import { ListItem, Checkbox, Typography, Box, IconButton, Dialog, keyframes } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import AlarmIcon from '@mui/icons-material/Alarm';
 import { Todo } from "../../../types/todo";
 import EditTodoForm from "./EditTodoForm";
 import { useState } from "react";
+
+const pulseAnimation = keyframes`
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+`;
 
 interface TodoItemProps {
   todo: Todo;
@@ -12,11 +28,11 @@ interface TodoItemProps {
   editTodo: (todo: Todo) => void;
 }
 
-
 const TodoItem = ( prop: TodoItemProps  ) => {
     const { todo, toggleComplete, deleteTodo, editTodo } = prop;
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+    const isOverdue = !todo.completed && todo.deadline < new Date();
 
     const handleToggle = () => {
         toggleComplete(todo.id);
@@ -39,6 +55,12 @@ const TodoItem = ( prop: TodoItemProps  ) => {
               justifyContent: 'space-between',
               borderBottom: '1px solid #eee',
               py: 1,
+              backgroundColor: isOverdue ? 'error.main' : 'transparent',
+              animation: isOverdue ? `${pulseAnimation} 2s ease-in-out infinite` : 'none',
+              borderRadius: 1,
+              '&:hover': {
+                backgroundColor: isOverdue ? 'error.dark' : 'action.hover',
+              },
           }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', flex: 1 }}>
@@ -52,7 +74,7 @@ const TodoItem = ( prop: TodoItemProps  ) => {
                 variant="subtitle1"
                 sx={{
                 textDecoration: todo.completed ? 'line-through' : 'none',
-                color: todo.completed ? 'text.secondary' : 'text.primary',
+                color: isOverdue ? 'common.white' : todo.completed ? 'text.secondary' : 'text.primary',
                 }}
               >
                 {todo.title}
@@ -61,23 +83,45 @@ const TodoItem = ( prop: TodoItemProps  ) => {
                 <Typography
                   variant="body2"
                   sx={{
-                      color: todo.completed ? 'text.disabled' : 'text.secondary',
+                      color: isOverdue ? 'common.white' : todo.completed ? 'text.disabled' : 'text.secondary',
                   }}
                 >
                   {todo.description}
                 </Typography>
               )}
-              <Typography variant="caption" color="text.secondary">
+              <Typography 
+                variant="caption" 
+                sx={{
+                  color: isOverdue ? 'common.white' : 'text.secondary',
+                }}
+              >
                 Deadline: {todo.deadline.toLocaleString()}
               </Typography>
             </Box>
           </Box>
 
-          <Box>
-            <IconButton aria-label="Edit todo" onClick={handleEdit}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {isOverdue && (
+              <AlarmIcon
+                sx={{
+                  color: 'common.white',
+                  mr: 1,
+                  animation: `${pulseAnimation} 2s ease-in-out infinite`,
+                }}
+              />
+            )}
+            <IconButton 
+              aria-label="Edit todo" 
+              onClick={handleEdit}
+              sx={{ color: isOverdue ? 'common.white' : 'default' }}
+            >
               <EditIcon />
             </IconButton>
-            <IconButton aria-label="Delete todo" color="error" onClick={handleDelete}>
+            <IconButton 
+              aria-label="Delete todo" 
+              onClick={handleDelete}
+              sx={{ color: isOverdue ? 'common.white' : 'error.main' }}
+            >
               <DeleteIcon />
             </IconButton>
           </Box>

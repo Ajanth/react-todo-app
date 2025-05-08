@@ -27,13 +27,12 @@ const EditTodoForm = ( { todo, editTodo, setIsDialogOpen }: EditTodoFormProps) =
         if (!deadline || deadline.getTime() < Date.now()) {
             setError("Please select a valid future date.");
             return;
-        }
-
-        const updatedTodo: Todo = {
+        }        const updatedTodo: Todo = {
             ...todo,
             title: title.trim(),
             description: description.trim() || undefined,
             deadline,
+            createdAt: todo.createdAt // Preserve the original creation date
         };
 
         editTodo(updatedTodo);
